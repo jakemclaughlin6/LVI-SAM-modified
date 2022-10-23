@@ -233,7 +233,7 @@ void img_callback(const sensor_msgs::ImageConstPtr &img_msg)
 
 void lidar_callback(const sensor_msgs::PointCloud2ConstPtr &laser_msg)
 {
-   
+
     static int lidar_count = -1;
     if (++lidar_count % (LIDAR_SKIP + 1) != 0)
         return; // 并不是所有激光帧都要
@@ -296,7 +296,7 @@ void lidar_callback(const sensor_msgs::PointCloud2ConstPtr &laser_msg)
         PointType p = laser_cloud_in->points[i];
         /**
          * @brief modified
-         * 
+         *
          */
         PointType p_cam;
         p_cam.x = lidar_normal_R_original(0, 0) * p.x + lidar_normal_R_original(0, 1) * p.y + lidar_normal_R_original(0, 2) * p.z;
@@ -305,16 +305,16 @@ void lidar_callback(const sensor_msgs::PointCloud2ConstPtr &laser_msg)
         if (p_cam.x >= 0 && abs(p_cam.y / p_cam.x) <= 10 && abs(p_cam.z / p_cam.x) <= 10) // assume lidar axis(x--->front y--->left z--->up)
             laser_cloud_in_filter->push_back(p);
     }
-    
+
     // ROS_INFO("laser_cloud_in_filter size: %d",laser_cloud_in_filter->size());
     *laser_cloud_in = *laser_cloud_in_filter;
-    // 4.  offset T_lidar -> T_camera 
+    // 4.  offset T_lidar -> T_camera
     /**
      * @brief modified
      *
      */
     pcl::PointCloud<PointType>::Ptr laser_cloud_offset(new pcl::PointCloud<PointType>());
-    Eigen::Affine3f transOffset = pcl::getTransformation(C_TX_L, C_TY_L, C_TZ_L,0, 0, 0);
+    Eigen::Affine3f transOffset = pcl::getTransformation(C_TX_L, C_TY_L, C_TZ_L, 0, 0, 0);
     transOffset = transOffset.inverse();
     pcl::transformPointCloud(*laser_cloud_in, *laser_cloud_offset, transOffset);
     *laser_cloud_in = *laser_cloud_offset;
@@ -396,9 +396,9 @@ int main(int argc, char **argv)
     pub_feature = n.advertise<sensor_msgs::PointCloud>(PROJECT_NAME + "/vins/feature/feature", 5);
     pub_match = n.advertise<sensor_msgs::Image>(PROJECT_NAME + "/vins/feature/feature_img", 5);
     pub_restart = n.advertise<std_msgs::Bool>(PROJECT_NAME + "/vins/feature/restart", 5);
-    pub_cloud =   n.advertise<sensor_msgs::PointCloud2>(PROJECT_NAME + "/vins/feature/cloud_test",   5);
-    pub_cloud2 =   n.advertise<sensor_msgs::PointCloud2>(PROJECT_NAME + "/vins/feature/cloud_test2",   5);
-    pub_cloud3 =   n.advertise<sensor_msgs::PointCloud2>(PROJECT_NAME + "/vins/feature/cloud_test3",   5);
+    pub_cloud = n.advertise<sensor_msgs::PointCloud2>(PROJECT_NAME + "/vins/feature/cloud_test", 5);
+    pub_cloud2 = n.advertise<sensor_msgs::PointCloud2>(PROJECT_NAME + "/vins/feature/cloud_test2", 5);
+    pub_cloud3 = n.advertise<sensor_msgs::PointCloud2>(PROJECT_NAME + "/vins/feature/cloud_test3", 5);
     // two ROS spinners for parallel processing (image and lidar)
     ros::MultiThreadedSpinner spinner(2);
     spinner.spin();

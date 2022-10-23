@@ -47,12 +47,12 @@ Eigen::Vector3d lidar_Trans_imu;
 
 /**
  * @brief modified
- * 
- * @param n 
- * @param name 
+ *
+ * @param n
+ * @param name
  */
 //获取配置文件中的参数
-//get parameters in your yaml file
+// get parameters in your yaml file
 void getParam(ros::NodeHandle &n, const std::string &name)
 {
 
@@ -206,9 +206,9 @@ void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
         std::lock_guard<std::mutex> lg(m_state);
         predict(imu_msg);
         std_msgs::Header header = imu_msg->header;
-        //solver_flag：INITIAL/NON_LINEAR
+        // solver_flag：INITIAL/NON_LINEAR
         //处在优化过程时输出位姿
-        // ROS_INFO("estimator.solver_flag %d",estimator.solver_flag);
+        //  ROS_INFO("estimator.solver_flag %d",estimator.solver_flag);
         if (estimator.solver_flag == Estimator::SolverFlag::NON_LINEAR)
             pubLatestOdometry(tmp_P, tmp_Q, tmp_V, header, estimator.failureCount);
     }
@@ -224,7 +224,7 @@ void feature_callback(const sensor_msgs::PointCloudConstPtr &feature_msg)
 {
     if (!init_feature)
     {
-        //skip the first detected feature, which doesn't contain optical flow speed
+        // skip the first detected feature, which doesn't contain optical flow speed
         init_feature = 1;
         return;
     }
@@ -257,7 +257,7 @@ void restart_callback(const std_msgs::BoolConstPtr &restart_msg)
 // thread: visual-inertial odometry
 void process()
 {
-  
+
     while (ros::ok())
     {
         std::vector<std::pair<std::vector<sensor_msgs::ImuConstPtr>, sensor_msgs::PointCloudConstPtr>> measurements;
@@ -312,13 +312,13 @@ void process()
                     ry = w1 * ry + w2 * imu_msg->angular_velocity.y;
                     rz = w1 * rz + w2 * imu_msg->angular_velocity.z;
                     estimator.processIMU(dt_1, Vector3d(dx, dy, dz), Vector3d(rx, ry, rz));
-                    //printf("dimu: dt:%f a: %f %f %f w: %f %f %f\n",dt_1, dx, dy, dz, rx, ry, rz);
+                    // printf("dimu: dt:%f a: %f %f %f w: %f %f %f\n",dt_1, dx, dy, dz, rx, ry, rz);
                 }
             }
 
             // 2. VINS Optimization
             // TicToc t_s;
-            //channels：id，u，v,vx，vy，depth
+            // channels：id，u，v,vx，vy，depth
             map<int, vector<pair<int, Eigen::Matrix<double, 8, 1>>>> image;
             for (unsigned int i = 0; i < img_msg->points.size(); i++)
             {
@@ -399,7 +399,7 @@ int main(int argc, char **argv)
     if (!USE_LIDAR)
         sub_odom.shutdown();
     std::thread measurement_process{process};
-    
+
     ros::MultiThreadedSpinner spinner(4);
     spinner.spin();
 

@@ -26,14 +26,14 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/filters/filter.h>
 #include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/crop_box.h> 
+#include <pcl/filters/crop_box.h>
 #include <pcl_conversions/pcl_conversions.h>
 
 #include <tf/LinearMath/Quaternion.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_broadcaster.h>
- 
+
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -56,8 +56,6 @@
 using namespace std;
 
 typedef pcl::PointXYZI PointType;
-
-
 
 extern int ROW;
 extern int COL;
@@ -95,7 +93,6 @@ extern double C_TZ_L;
 extern double C_RX_L;
 extern double C_RY_L;
 extern double C_RZ_L;
-
 
 void readParameters(ros::NodeHandle &n);
 
